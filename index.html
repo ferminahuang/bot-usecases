@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>海慧的 AI 助手团队 · 真实用法</title><style>
+:root{--bg:#f6f4ef;--ink:#1d2433;--mute:#6b7280;--acc:#e8572a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,"PingFang SC","Noto Sans CJK SC",sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:40px 20px 16px;max-width:1100px;margin:auto}h1{margin:0 0 6px;font-size:28px}header p{margin:0;color:var(--mute)}
+.bar{max-width:1100px;margin:auto;padding:0 20px;position:sticky;top:0;background:var(--bg);padding-bottom:12px}
+#q{width:100%;padding:12px 14px;font-size:16px;border:2px solid #ddd;border-radius:10px;margin:8px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid #ccc;background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+main{max-width:1100px;margin:auto;padding:8px 20px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:#fff;border-radius:12px;padding:16px;border-top:4px solid var(--acc);box-shadow:0 1px 3px #0001}
+.card h3{margin:6px 0;font-size:17px}.card p{margin:0;color:#374151;font-size:14px;line-height:1.55}
+.meta{font-size:12px;color:var(--mute)}.card a{display:inline-block;margin-top:8px;color:var(--acc);font-size:14px}
+#count{color:var(--mute);font-size:13px;margin-top:8px}footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
+</style></head><body>
+<header><h1>海慧的 AI 助手团队 · 真实用法</h1><p>一群 Grok Bot 助手怎样分工帮我求职、接单、做作品集和量化研究。</p></header>
+<div class="bar"><input id="q" placeholder="搜索标题、描述或助手名…"><div class="chips" id="chips"></div><div id="count"></div></div>
+<main id="grid"></main><footer>内容均为本人实际使用情况 · 黄海慧</footer>
+<script src="data.js"></script><script>
+const cats=["全部",...new Set(ENTRIES.map(e=>e.cat))];let cur="全部";
+const chips=document.getElementById("chips"),grid=document.getElementById("grid"),q=document.getElementById("q");
+cats.forEach(c=>{const b=document.createElement("button");b.className="chip"+(c===cur?" on":"");b.textContent=c;b.onclick=()=>{cur=c;[...chips.children].forEach(x=>x.classList.toggle("on",x.textContent===c));render()};chips.append(b)});
+function esc(s){return s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))}
+function render(){const t=q.value.trim().toLowerCase();const list=ENTRIES.filter(e=>(cur==="全部"||e.cat===cur)&&(!t||(e.title+e.desc+e.bot+e.cat).toLowerCase().includes(t)));
+grid.innerHTML=list.map(e=>`<div class="card"><div class="meta">${esc(e.cat)} · ${esc(e.bot)}</div><h3>${esc(e.title)}</h3><p>${esc(e.desc)}</p>${e.link?`<a href="${e.link}" target="_blank">打开 ↗</a>`:""}</div>`).join("");
+document.getElementById("count").textContent=`共 ${list.length} 条`}
+q.oninput=render;render();
+</script></body></html>
